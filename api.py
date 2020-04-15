@@ -8,7 +8,7 @@ from transformers import (AlbertConfig,
 
 
 class SentimentAnalyzer:
-    def __init__(self, path='../results/albert/output', model_type='albert-large-v2'):
+    def __init__(self, path='output', model_type='albert-large-v2'):
         self.path = path
         self.model_type = model_type
         self.tokenizer = AlbertTokenizer.from_pretrained(self.model_type, do_lower_case=True)
