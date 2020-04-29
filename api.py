@@ -1,5 +1,6 @@
 import torch
 import torch.nn.functional as F
+import argparse
 
 from transformers import (AlbertConfig,
                           AlbertForSequenceClassification,
@@ -8,7 +9,7 @@ from transformers import (AlbertConfig,
 
 
 class SentimentAnalyzer:
-    def __init__(self, path='output', model_type='albert-large-v2'):
+    def __init__(self, path, model_type):
         self.path = path
         self.model_type = model_type
         self.tokenizer = AlbertTokenizer.from_pretrained(self.model_type, do_lower_case=True)
@@ -18,7 +19,6 @@ class SentimentAnalyzer:
         self.model.eval()
 
     def convert_to_features(self, sentence):
-
         text_a = sentence
         text_b = None
         max_length = 512
@@ -86,6 +86,11 @@ class SentimentAnalyzer:
 
 
 if __name__ ==  '__main__':
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--path", required=True, type=str, help="path to finetuned albert model")
+    ap.add_argument("--model_name", required=True, type=str, help="variant of albert to use")
+    args = vars(ap.parse_args())
+    analyzer = SentimentAnalyzer(args.path, args.model_name)
+
     text = 'Amazing how the Fake News never covers this. No Interest on Student Loans. The Dems are just talk!'
-    analyzer = SentimentAnalyzer()
     print(analyzer.predict(text))

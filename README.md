@@ -9,12 +9,12 @@ Train dataset needs to be placed in a folder.
 1. --data_dir - Directory where data is stored
 2. --model_type - The model which we wanna use for fine-tuning. Here, we are using <i>albert</i>
 3. --model_name_or_path - The variant of albert which you want to use.
-4. --output_dir - path where you want to save the model.
-5. --do_train - because we are training the model.
+4. --output_dir - Path where you want to save the model.
+5. --do_train - Because we are training the model.
 
 #### Example
 ```
-$ python run_glue.py --data_dir data --model_type albert --model_name_or_path albert-base-v2 --output_dir output --do_train
+$ python3 run_glue.py --data_dir data --model_type albert --model_name_or_path albert-base-v2 --output_dir dev/output --do_train
 ```
 
 ## Different Models available for use
@@ -36,13 +36,16 @@ $ python run_glue.py --data_dir data --model_type albert --model_name_or_path al
 Both docker and python file are available for prediction.
 1. Set the name of folder where model files are stored.
 2. Run api.py file
+#### Required Parameters:
+1. --path - Path to fine-tuned albert model (should be same as --output_dir in fine-tuning)
+2. --model_name - Variant of albert you want to use (should be same as --model_name_or_path in fine-tuning)
 ```
-$ python api.py
+$ python api.py -path dev/output -model_name albert-base-v2
 ```
 or
 ```
 from api import SentimentAnalyzer
-classifier = SentimentAnalyzer()
+classifier = SentimentAnalyzer('dev/output', 'albert-base-v2')
 print(classifier.predict('the movie was nice'))
 ```
 
