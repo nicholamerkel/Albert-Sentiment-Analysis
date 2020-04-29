@@ -33,14 +33,12 @@ $ python3 run_glue.py --data_dir data --model_type albert --model_name_or_path a
 (table taken from Google-research)
 
 ## Prediction
-Both docker and python file are available for prediction.
-1. Set the name of folder where model files are stored.
-2. Run api.py file
+To run predictions via api.py:
 #### Required Parameters:
 1. --path - Path to fine-tuned albert model (should be same as --output_dir in fine-tuning)
 2. --model_name - Variant of albert you want to use (should be same as --model_name_or_path in fine-tuning)
 ```
-$ python api.py -path dev/output -model_name albert-base-v2
+$ python3 api.py -path dev/output -model_name albert-base-v2
 ```
 or
 ```
