@@ -277,6 +277,8 @@ def main():
     parser.add_argument("--output_dir", default=None, type=str, required=True,
                         help="The output directory where the model predictions and checkpoints will be written.")
 
+    # parser.add_argument("--num_labels", default=2, type=int, required=True, help="Number of labels in fine-tuning data")
+
     ## Other parameters
     parser.add_argument("--config_name", default="", type=str,
                         help="Pretrained config name or path if not the same as model_name")
@@ -372,7 +374,15 @@ def main():
     processor = processors[args.task_name]()
     args.output_mode = output_modes[args.task_name]
     label_list = processor.get_labels()
+    print("label list! : ", label_list)
     num_labels = len(label_list)
+    # num_labels = args.num_labels
+    # label_list = []
+    # for i in range(num_labels):
+    #     label_list.append(i)
+    #
+    # print("------label List in run_glue: ", label_list)
+
 
     # Load pretrained model and tokenizer
     if args.local_rank not in [-1, 0]:

@@ -116,7 +116,7 @@ class DataProcessor(object):
         raise NotImplementedError()
 
     def tfds_map(self, example):
-        """Some tensorflow_datasets datasets are not formatted the same way the GLUE datasets are. 
+        """Some tensorflow_datasets datasets are not formatted the same way the GLUE datasets are.
         This method converts examples to the correct format."""
         if len(self.get_labels()) > 1:
             example.label = self.get_labels()[int(example.label)]
@@ -167,6 +167,7 @@ def glue_convert_examples_to_features(examples, tokenizer,
         a list of task-specific ``InputFeatures`` which can be fed to the model.
 
     """
+    print("------LABEL LIST: ", label_list)
     if task is not None:
         processor = glue_processors[task]()
         if label_list is None:
@@ -208,13 +209,17 @@ def glue_convert_examples_to_features(examples, tokenizer,
         assert len(attention_mask) == max_length, "Error with input length {} vs {}".format(len(attention_mask), max_length)
         assert len(token_type_ids) == max_length, "Error with input length {} vs {}".format(len(token_type_ids), max_length)
 
-        label = label_map[str(example.label)]
-        
+        try:
+            label = label_map[str(example.label)]
+            # print("successful:" , example)
+        except Exception as e:
+            print(f"ERROR: {e}: {example}")
         features.append(
                 InputFeatures(input_ids=input_ids,
                               attention_mask=attention_mask,
                               token_type_ids=token_type_ids,
                               label=label))
+
     return features
 
 
@@ -240,7 +245,9 @@ class Sst2Processor(DataProcessor):
 
     def get_labels(self):
         """See base class."""
+        # return ["0", "1", "2", "3", "4", "5"]
         return ["0", "1"]
+        # return ["-1", "0", "1"]
 
     def _create_examples(self, lines, set_type):
         """Creates examples for the training and dev sets."""
@@ -277,7 +284,9 @@ class Sst5Processor(DataProcessor):
 
     def get_labels(self):
         """See base class."""
+        # return ["-1", "0", "1"]
         return ["1", "2", "3", "4", "5"]
+
 
     def _create_examples(self, lines, set_type):
         """Creates examples for the training and dev sets."""

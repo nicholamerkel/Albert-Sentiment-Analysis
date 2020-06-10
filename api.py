@@ -1,6 +1,9 @@
 import torch
 import torch.nn.functional as F
 import argparse
+# import xlsxwriter
+# import xlrd
+import openpyxl
 
 from transformers import (AlbertConfig,
                           AlbertForSequenceClassification,
@@ -89,8 +92,27 @@ if __name__ ==  '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument("--path", required=True, type=str, help="path to finetuned albert model")
     ap.add_argument("--model_name", required=True, type=str, help="variant of albert to use")
+    ap.add_argument("--file", required=False, type=str, help="path to xlsx file to feed in for predictions")
     args = vars(ap.parse_args())
-    analyzer = SentimentAnalyzer(args.path, args.model_name)
+    analyzer = SentimentAnalyzer(args['path'], args['model_name'])
+    if (args['file']):
+        print("----file present: "+  args['file'] + "----")
+        wkbk = openpyxl.load_workbook(args['file'])
+        sheet = wkbk.active # get working sheet
+        num_entries = sheet.max_row
+        for i in range(1, num_entries+1):
+            entry = sheet.cell(row = i, column = 1).value
+            print(entry)
+            prediction = analyzer.predict(entry)
+            predict_label = prediction['label']
+            print(f"sentiment prediction: {predict_label} w confidence: {prediction['confidence']}")
+            print("\n")
+            output = sheet.cell(row = i, column = 3)
+            output.value = predict_label
+        wkbk.save(args['file'])
 
-    text = 'Amazing how the Fake News never covers this. No Interest on Student Loans. The Dems are just talk!'
-    print(analyzer.predict(text))
+    else:
+        # text = 'Amazing how the Fake News never covers this. No Interest on Student Loans. The Dems are just talk!'
+        text = "Mysterious coronavirus condition ‘happy hypoxia’ baffles doctors"
+        print(text)
+        print(analyzer.predict(text))

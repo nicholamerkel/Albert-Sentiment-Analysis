@@ -14,7 +14,7 @@ Train dataset needs to be placed in a folder.
 
 #### Example
 ```
-$ python3 run_glue.py --data_dir data --model_type albert --model_name_or_path albert-base-v2 --output_dir dev/output --do_train
+$ python3 run_glue.py --data_dir data --model_type albert --model_name_or_path albert-base-v2 --output_dir dev/output --task_name sst-2 --do_train
 ```
 
 ## Different Models available for use
@@ -38,13 +38,14 @@ To run predictions via api.py:
 1. --path - Path to fine-tuned albert model (should be same as --output_dir in fine-tuning)
 2. --model_name - Variant of albert you want to use (should be same as --model_name_or_path in fine-tuning)
 ```
-$ python3 api.py -path dev/output -model_name albert-base-v2
+$ python3 api.py --path dev/output --model_name albert-base-v2
 ```
 or
 ```
-from api import SentimentAnalyzer
-classifier = SentimentAnalyzer('dev/output', 'albert-base-v2')
-print(classifier.predict('the movie was nice'))
+$ python3
+>>> from api import SentimentAnalyzer
+>>> classifier = SentimentAnalyzer('dev/output', 'albert-base-v2')
+>>> print(classifier.predict('the movie was nice'))
 ```
 
 ## Thanks to HuggingFace for making the implementation simple and also Google for this awesome pretrained model.
