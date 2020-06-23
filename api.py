@@ -112,7 +112,7 @@ if __name__ ==  '__main__':
         wkbk.save(args['file'])
 
     else:
-        # text = 'Amazing how the Fake News never covers this. No Interest on Student Loans. The Dems are just talk!'
-        text = "Mysterious coronavirus condition ‘happy hypoxia’ baffles doctors"
+        # text = "Mysterious coronavirus condition ‘happy hypoxia’ baffles doctors"
+        text = 'trump work lets reopen'
         print(text)
         print(analyzer.predict(text))
