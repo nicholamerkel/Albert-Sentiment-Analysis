@@ -245,9 +245,45 @@ class Sst2Processor(DataProcessor):
 
     def get_labels(self):
         """See base class."""
-        # return ["0", "1", "2", "3", "4", "5"]
         return ["0", "1"]
-        # return ["-1", "0", "1"]
+
+    def _create_examples(self, lines, set_type):
+        """Creates examples for the training and dev sets."""
+        examples = []
+        for (i, line) in enumerate(lines):
+            if i == 0:
+                continue
+            guid = "%s-%s" % (set_type, i)
+            text_a = line[0]
+            label = line[1]
+            examples.append(
+                InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
+        return examples
+
+class Sst3Processor(DataProcessor):
+    """Processor for the SST-3 data set (GLUE version)."""
+
+    def get_example_from_tensor_dict(self, tensor_dict):
+        """See base class."""
+        return InputExample(tensor_dict['idx'].numpy(),
+                            tensor_dict['sentence'].numpy().decode('utf-8'),
+                            None,
+                            str(tensor_dict['label'].numpy()))
+
+    def get_train_examples(self, data_dir):
+        """See base class."""
+        return self._create_examples(
+            self._read_tsv(os.path.join(data_dir, "train.tsv")), "train")
+
+    def get_dev_examples(self, data_dir):
+        """See base class."""
+        return self._create_examples(
+            self._read_tsv(os.path.join(data_dir, "dev.tsv")), "dev")
+
+    def get_labels(self):
+        """See base class."""
+        return ["0", "1", "2"]
+
 
     def _create_examples(self, lines, set_type):
         """Creates examples for the training and dev sets."""
@@ -284,7 +320,6 @@ class Sst5Processor(DataProcessor):
 
     def get_labels(self):
         """See base class."""
-        # return ["-1", "0", "1"]
         return ["0", "1", "2", "3", "4"]
 
 
@@ -304,16 +339,19 @@ class Sst5Processor(DataProcessor):
 glue_tasks_num_labels = {
     "sst-2": 2,
     "sst-5": 5,
+    "sst-3": 3,
 }
 
 glue_processors = {
     "sst-2": Sst2Processor,
     "sst-5": Sst5Processor,
+    "sst-3": Sst3Processor,
 }
 
 glue_output_modes = {
     "sst-2": "classification",
     "sst-5": "classification",
+    "sst-3": "classification",
 }
 
 
@@ -326,6 +364,8 @@ def glue_compute_metrics(task_name, preds, labels):
     if task_name == "sst-2":
         return {"acc": simple_accuracy(preds, labels)}
     elif task_name == "sst-5":
+        return {"acc": simple_accuracy(preds, labels)}
+    elif task_name == "sst-3":
         return {"acc": simple_accuracy(preds, labels)}
     else:
         raise KeyError(task_name)
