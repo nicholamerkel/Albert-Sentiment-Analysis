@@ -100,7 +100,7 @@ if __name__ ==  '__main__':
         wkbk = openpyxl.load_workbook(args['file'])
         sheet = wkbk.active # get working sheet
         num_entries = sheet.max_row
-        for i in range(1, num_entries+1):
+        for i in range(2, num_entries+1):
             entry = sheet.cell(row = i, column = 1).value
             print(entry)
             prediction = analyzer.predict(entry)

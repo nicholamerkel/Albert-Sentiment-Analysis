@@ -1,1 +1,1 @@
-python3 api.py --path dev/coronavirus_twitter --model_name albert-large-v2 --file to_predict/2020-06-08__11\:37\:33__coronavirus__latest.xlsx
+python3 api.py --path dev/covid_output --model_name albert-large-v2 --file to_predict/toPredict.xlsx
